@@ -7,7 +7,6 @@ import {
   updateTodos,
 } from "../redux/reducer";
 import TodoItem from "./TodoItem";
-import { AnimatePresence, motion } from "framer-motion";
 
 const mapStateToProps = (state) => {
   return {
@@ -25,35 +24,33 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const DisplayTodos = (props) => {
-  const [sort, setSort] = useState("active");
+  const [filter, setFilter] = useState("active");
+
   return (
-    <div className="displaytodos">
-      <div className="buttons">
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => setSort("active")}
-        >
-          Active
-        </motion.button>
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => setSort("completed")}
-        >
-          Completed
-        </motion.button>
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => setSort("all")}
+    <>
+       <div className="FilterWrapper">
+        <button
+          className= {`FilterButton ${filter === "all" && 'ActiveFillterButton'}`}
+          onClick={() => setFilter("all")}
         >
           All
-        </motion.button>
+        </button>
+        <button
+          onClick={() => setFilter("active")}
+          className={`FilterButton ${filter === "active" && 'ActiveFillterButton'}`}
+        >
+          Active
+        </button>
+        <button
+          className={`FilterButton ${filter === "completed" && 'ActiveFillterButton'}`}
+          onClick={() => setFilter("completed")}
+        >
+          Completed
+        </button>
+        
       </div>
-      <ul>
-        <AnimatePresence>
-          {props.todos.length > 0 && sort === "active"
+      <ul className="TodosCardWrapper">
+          {props.todos.length > 0 && filter === "active"
             ? props.todos.map((item) => {
                 return (
                   item.completed === false && (
@@ -68,8 +65,8 @@ const DisplayTodos = (props) => {
                 );
               })
             : null}
-          {/* for completed items */}
-          {props.todos.length > 0 && sort === "completed"
+
+          {props.todos.length > 0 && filter === "completed"
             ? props.todos.map((item) => {
                 return (
                   item.completed === true && (
@@ -84,8 +81,8 @@ const DisplayTodos = (props) => {
                 );
               })
             : null}
-          {/* for all items */}
-          {props.todos.length > 0 && sort === "all"
+
+          {props.todos.length > 0 && filter === "all"
             ? props.todos.map((item) => {
                 return (
                   <TodoItem
@@ -98,9 +95,8 @@ const DisplayTodos = (props) => {
                 );
               })
             : null}
-        </AnimatePresence>
       </ul>
-    </div>
+    </>
   );
 };
 

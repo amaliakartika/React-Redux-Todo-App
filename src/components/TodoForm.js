@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { addTodos } from "../redux/reducer";
-import { GoPlus } from "react-icons/go";
-import { motion } from "framer-motion";
+
 
 const mapStateToProps = (state) => {
   return {
@@ -35,27 +34,26 @@ const Todos = (props) => {
       setTodo("");
     }
   };
-  //console.log("props from store", props);
+  
   return (
-    <div className="addTodos">
+    <div className="TodoFormWrapper">
       <input
         type="text"
         onChange={(e) => handleChange(e)}
-        className="todo-input"
+        className="TodoName"
         value={todo}
+        placeholder="What to do"
       />
 
-      <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        className="add-btn"
+      <button
         onClick={() => add()}
       >
-        <GoPlus />
-      </motion.button>
+         Add
+      </button>
       <br />
     </div>
   );
 };
-//we can use connect method to connect this component with redux store
+
+
 export default connect(mapStateToProps, mapDispatchToProps)(Todos);

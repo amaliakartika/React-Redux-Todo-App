@@ -1,79 +1,75 @@
-import { motion } from "framer-motion";
-import React, { useRef } from "react";
-import { AiFillEdit } from "react-icons/ai";
-import { IoCheckmarkDoneSharp, IoClose } from "react-icons/io5";
+import React, { useRef, useState } from "react";
+
 
 const TodoItem = (props) => {
   const { item, updateTodo, removeTodo, completeTodo } = props;
 
+  const [isChecked, setIsChecked] = useState(false);
+
   const inputRef = useRef(true);
+  const checkboxRef = useRef(true);
 
   const changeFocus = () => {
     inputRef.current.disabled = false;
     inputRef.current.focus();
   };
 
-  const update = (id, value, e) => {
+  const handleCheckboxChange = () => {
+    setIsChecked(true);
+    completeTodo(item.id)
+  };
+
+  const updateTask = (id, value, e) => {
     if (e.which === 13) {
-      //here 13 is key code for enter key
+
       updateTodo({ id, item: value });
       inputRef.current.disabled = true;
     }
   };
+
+  console.log(item);
   return (
-    <motion.li
-      initial={{ x: "150vw", transition: { type: "spring", duration: 2 } }}
-      animate={{ x: 0, transition: { type: "spring", duration: 2 } }}
-      whileHover={{
-        scale: 0.9,
-        transition: { type: "spring", duration: 0.1 },
-      }}
-      exit={{
-        x: "-60vw",
-        scale: [1, 0],
-        transition: { duration: 0.5 },
-        backgroundColor: "rgba(255,0,0,1)",
-      }}
+    <li
       key={item.id}
-      className="card"
+      className="TodoCard"
     >
-      <textarea
+   
+      <div 
+        ref={checkboxRef}
+        className="TodoChecked" 
+        onClick={handleCheckboxChange}
+      >
+        {
+          item.completed && (
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#b8b8b8"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 12.6111L8.92308 17.5L20 6.5" stroke="##b8b8b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+          )
+        }
+      </div>
+
+      <input
+        type="text"
         ref={inputRef}
         disabled={inputRef}
         defaultValue={item.item}
-        onKeyPress={(e) => update(item.id, inputRef.current.value, e)}
+        onKeyPress={(e) => updateTask(item.id, inputRef.current.value, e)}
+        className={`TodoName ${item.completed && 'CompletedTodo'}`}
       />
-      <div className="btns">
-        <motion.button
-          whileHover={{ scale: 1.4 }}
-          whileTap={{ scale: 0.9 }}
+      <div className="ActionButtons">
+        <button
           onClick={() => changeFocus()}
+          className="EditButton"
         >
-          {" "}
-          <AiFillEdit />{" "}
-        </motion.button>
-        {item.completed === false && (
-          <motion.button
-            whileHover={{ scale: 1.4 }}
-            whileTap={{ scale: 0.9 }}
-            style={{ color: "green" }}
-            onClick={() => completeTodo(item.id)}
-          >
-            <IoCheckmarkDoneSharp />
-          </motion.button>
-        )}
-        <motion.button
-          whileHover={{ scale: 1.4 }}
-          whileTap={{ scale: 0.9 }}
-          style={{ color: "red" }}
+         edit
+        </button>
+        
+        <button
           onClick={() => removeTodo(item.id)}
+          className="DeleteButton"
         >
-          {" "}
-          <IoClose />
-        </motion.button>{" "}
+          delete
+        </button>
       </div>
-      {item.completed && <span className="completed">done</span>}
-    </motion.li>
+    </li>
   );
 };
 
